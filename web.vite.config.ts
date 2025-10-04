@@ -1,10 +1,10 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { type CSSModulesOptions, defineConfig, normalizePath } from 'vite';
+import { defineConfig, normalizePath } from 'vite';
 import { ViteEjsPlugin } from 'vite-plugin-ejs';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig(({mode}) => ({
+export default defineConfig({
     base: './',
     build: {
         assetsDir: "assets",
@@ -30,7 +30,7 @@ export default defineConfig(({mode}) => ({
     },
     css: {
         modules: {
-            localsConvention: 'camelCase' as CSSModulesOptions["localsConvention"],
+            localsConvention: 'camelCase',
         },
     },
     optimizeDeps: {
@@ -125,4 +125,4 @@ export default defineConfig(({mode}) => ({
         },
     },
     root: path.resolve(__dirname, './src/renderer'),
-}));
+});
