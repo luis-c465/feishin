@@ -1,16 +1,24 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig, normalizePath } from 'vite';
+import { type CSSModulesOptions, defineConfig, normalizePath } from 'vite';
 import { ViteEjsPlugin } from 'vite-plugin-ejs';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig({
+export default defineConfig(({mode}) => ({
     base: './',
     build: {
+        assetsDir: "assets",
         emptyOutDir: true,
         outDir: path.resolve(__dirname, './out/web'),
         rollupOptions: {
             input: {
+                "32x32": normalizePath(path.resolve(__dirname, './assets/icons/32x32.png')),
+                "64x64": normalizePath(path.resolve(__dirname, './assets/icons/64x64.png')),
+                "128x128": normalizePath(path.resolve(__dirname, './assets/icons/128x128.png')),
+                "256x256": normalizePath(path.resolve(__dirname, './assets/icons/256x256.png')),
+                "512x512": normalizePath(path.resolve(__dirname, './assets/icons/512x512.png')),
+                "1024x1024": normalizePath(path.resolve(__dirname, './assets/icons/1024x1024.png')),
+                "preview_full_screen_player": normalizePath(path.resolve(__dirname, './media/preview_full_screen_player.png')),
                 favicon: normalizePath(path.resolve(__dirname, './assets/icons/favicon.ico')),
                 index: normalizePath(path.resolve(__dirname, './src/renderer/index.html')),
             },
@@ -22,7 +30,7 @@ export default defineConfig({
     },
     css: {
         modules: {
-            localsConvention: 'camelCase',
+            localsConvention: 'camelCase' as CSSModulesOptions["localsConvention"],
         },
     },
     optimizeDeps: {
@@ -41,16 +49,20 @@ export default defineConfig({
             web: true,
         }),
         VitePWA({
+            // buildBase: path.resolve(__dirname, "./out/web/assets"),
             registerType: 'autoUpdate', // This is a common and sensible default
             // Optionally enable for dev mode testing
             devOptions: {
                 enabled: true,
-            resolveTempFolder: () => path.resolve(__dirname, "web-pwa-dist")
+                resolveTempFolder: () => path.resolve(__dirname, "web-pwa-dist")
             },
             workbox: {
                 // 5MB
                 maximumFileSizeToCacheInBytes: 1000000 * 5
             },
+            outDir: path.resolve(__dirname, "./out/web/assets"),
+            injectRegister: "inline",
+            manifestFilename: "assets/manifest.webmanifest",
             manifest: {
                 name: 'Feishin',
                 short_name: 'Feishin',
@@ -111,8 +123,6 @@ export default defineConfig({
             '/@/renderer': path.resolve(__dirname, './src/renderer'),
             '/@/shared': path.resolve(__dirname, './src/shared'),
         },
-        preserveSymlinks: true
     },
     root: path.resolve(__dirname, './src/renderer'),
-    publicDir: path.resolve(__dirname, "./public")
-});
+}));
